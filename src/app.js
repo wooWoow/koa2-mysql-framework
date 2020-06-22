@@ -38,7 +38,7 @@ app.use(
   jwt({
     secret: publicKey.toString(),
   }).unless({
-    path: [/^\/v1\/users\/login/, /^\/v1\/home/, /^\/v1\/assets/],
+    path: [/^\/v1\/users\/login/, /^\/v1\/home/, /^\/v1\/assets/, /^\/v1\/info\/sys/],
   })
 );
 

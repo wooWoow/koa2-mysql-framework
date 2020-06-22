@@ -32,7 +32,7 @@ class helper {
             resolve(buf.toString())
          })
       })
-   }   
+   }
 }
 
 export default helper
