@@ -7,6 +7,8 @@ const router = koaRouter();
  */
 router.prefix("/v1/info");
 
-router.get("/sys", infoController.getSysInfo);
+router.get("/sysInfo", infoController.getSysInfo);
+
+router.get("/goldInfo", infoController.getGoldInfo);
 
 export default router;

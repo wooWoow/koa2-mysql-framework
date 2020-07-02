@@ -1,3 +1,4 @@
 /node_modules/
 yarn.lock
 /logs/
+/config/txapi.config.js
