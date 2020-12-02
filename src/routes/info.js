@@ -7,7 +7,7 @@ const router = koaRouter();
  */
 router.prefix("/v1/info");
 
-router.get("/sysInfo", infoController.getSysInfo);
+router.post("/sysInfo", infoController.getSysInfo);
 
 router.get("/goldInfo", infoController.getGoldInfo);
 

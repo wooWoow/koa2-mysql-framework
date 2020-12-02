@@ -11,16 +11,22 @@ class infoController {
    * 获取获取系统信息
    */
   static async getSysInfo(ctx) {
-    await utils.doExec("ls").then(
-      (data) => {
-        helper.responseFormat(ctx, 200, "查询成功", { info: data });
-        logger.info("sys/sysInfo", "response:", { info: data });
-      },
-      (err) => {
-        helper.responseFormat(ctx, 412, "查询失败", { info: err });
-        logger.info("sys/sysInfo", "response:", { info: err });
-      }
-    );
+    let params = ctx.request.body || ctx.request.query;
+    if (params && params.params && params.params.commond) {
+      await utils.doExec(params.params.commond).then(
+        (data) => {
+          helper.responseFormat(ctx, 200, "查询成功", { info: data });
+          logger.info("sys/sysInfo", "response:", { info: data });
+        },
+        (err) => {
+          helper.responseFormat(ctx, 412, "查询失败", { info: err });
+          logger.info("sys/sysInfo", "response:", { info: err });
+        }
+      );
+    } else {
+      helper.responseFormat(ctx, 412, "查询失败", { info: '参数缺失' });
+      logger.info("sys/sysInfo", "response:", { info: '参数缺失' });
+    }
   }
 
   static async getGoldInfo(ctx) {
