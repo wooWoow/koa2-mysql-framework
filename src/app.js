@@ -3,6 +3,7 @@ import session from "koa-session";
 import views from "koa-views";
 import json from "koa-json";
 import onerror from "koa-onerror";
+import koaBody from "koa-body";
 import bodyparser from "koa-bodyparser";
 import koaLogger from "koa-logger";
 import path from "path";
@@ -18,6 +19,17 @@ const app = new Koa();
 const publicKey = fs.readFileSync(path.join(__dirname, "../publicKey.pub"));
 onerror(app);
 logger.error("start app", "env:", process.env.NODE_ENV);
+
+// 上传中间件
+app.use(
+  koaBody({
+    multipart: true,
+    formidable: {
+      maxFileSize: 200 * 1024 * 1024, // 设置上传文件大小最大限制，默认2M
+    },
+  })
+);
+
 // middlewares
 app.use(
   bodyparser({
@@ -31,14 +43,19 @@ app.use(koaLogger());
 // router error
 app.use(errorRoute());
 
-app.use(require("koa-static")(__dirname + "../assets"));
+// 静态资源
+app.use(require("koa-static")(path.join(__dirname, "../assets")));
 
 // set the signature, control api to be accessed
 app.use(
   jwt({
     secret: publicKey.toString(),
   }).unless({
-    path: [/^\/v1\/users\/login/, /^\/v1\/home/, /^\/v1\/assets/, /^\/v1\/info\/[\s\S]*/],
+    path: [
+      /^\/v1\/users\/login/,
+      /^\/v1\/home/,
+      /^\/v1\/info\/[\s\S]*/
+    ],
   })
 );
 
