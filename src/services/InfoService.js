@@ -2,11 +2,26 @@ import sqlHelper from "../utils/sqlHelper.js";
 
 class InfoService extends sqlHelper {
   async saveNode(params) {
-    return await this.query(`
-        INSERT INTO nodes 
-        (node_title, node_date, node_content, user_id, node_type, node_display)
-        VALUES
-        ('${params.title}', NOW(), '${params.content}', '${params.userId}', '${params.type}', '1')`);
+    let sql = `
+      INSERT INTO nodes 
+      (node_title, node_date, node_content, user_id, node_type, node_display)
+      VALUES
+      ('${params.title}', NOW(), '${params.content}', '${params.userId}', '${params.type}', '1')
+    `;
+
+    if (params.nodeId) {
+      sql = `
+        UPDATE nodes 
+        SET
+          node_title = '${params.title}',
+          node_content = '${params.content}',
+          node_date = NOW()
+        WHERE
+          user_id = ${params.userId} AND node_id = ${params.nodeId}
+      `;
+    }
+
+    return await this.query(sql);
   }
 
   async queryNode(params) {
