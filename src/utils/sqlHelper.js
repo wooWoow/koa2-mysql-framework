@@ -10,19 +10,24 @@ export default class sqlHelper {
   }
   static execute(sql, values) {
     return new Promise((resolve, reject) => {
-      sqlHelper.getPool().getConnection((err, conn) => {
-        if (err) return reject(err);
+      let pool = sqlHelper.getPool();
+      pool.getConnection((err, conn) => {
+        if (err) {
+          reject(err);
+          conn.destroy();
+          return;
+        }
         if (values !== undefined) {
           conn.query(sql, values, (err, rows) => {
             if (err) reject(err);
             else resolve(rows);
-            conn.release();
+            conn.destroy();
           });
         } else {
           conn.query(sql, (err, rows) => {
             if (err) reject(err);
             else resolve(rows);
-            conn.release();
+            conn.destroy();
           });
         }
       });

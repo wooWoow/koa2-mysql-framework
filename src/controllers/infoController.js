@@ -115,8 +115,8 @@ class infoController {
         let data = await InfoService.queryNode(params);
         helper.responseFormat(ctx, 200, "success", data);
       } else {
-        helper.responseFormat(ctx, 412, "参数缺失", {err: '缺失user_id'});
-        logger.error("node/query", "response:", {err: '缺失user_id'});
+        helper.responseFormat(ctx, 412, "参数缺失", { err: "缺失user_id" });
+        logger.error("node/query", "response:", { err: "缺失user_id" });
       }
     } catch (err) {
       helper.responseFormat(ctx, 412, "信息查询失败", err);
@@ -129,11 +129,16 @@ class infoController {
       let params = Object.assign({}, ctx.request.query, ctx.request.body);
 
       if (params.userId && ctx.params.id) {
-        let data = await InfoService.moveNodeToTrash({user_id: params.userId, node_id: ctx.params.id});
+        let queryParams = {
+          user_id: params.userId,
+          node_id: ctx.params.id,
+          display: params.display,
+        };
+        let data = await InfoService.moveNodeToTrash(queryParams);
         helper.responseFormat(ctx, 200, "success", data);
       } else {
-        helper.responseFormat(ctx, 412, "参数缺失", {err: '缺失参数'});
-        logger.error("node/query", "response:", {err: '缺失参数'});
+        helper.responseFormat(ctx, 412, "参数缺失", { err: "缺失参数" });
+        logger.error("node/query", "response:", { err: "缺失参数" });
       }
     } catch (err) {
       helper.responseFormat(ctx, 412, "信息查询失败", err);
