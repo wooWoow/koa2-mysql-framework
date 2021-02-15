@@ -19,4 +19,10 @@ router.get("/node/query", infoController.getNode);
 
 router.delete("/node/:id", infoController.delNode);
 
+router.get("/node/type", infoController.getNodeType);
+
+router.delete("/node/type/:id", infoController.delNodeType);
+
+router.post("/node/type/add", infoController.addNodeType);
+
 export default router;

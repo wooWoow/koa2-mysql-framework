@@ -24,16 +24,16 @@ class infoController {
       await utils.doExec(params.params.commond).then(
         (data) => {
           helper.responseFormat(ctx, 200, "查询成功", { info: data });
-          logger.info("sys/sysInfo", "response:", { info: data });
+          logger.info("getSysInfo", "response:", { info: data });
         },
         (err) => {
           helper.responseFormat(ctx, 412, "查询失败", { info: err });
-          logger.info("sys/sysInfo", "response:", { info: err });
+          logger.info("getSysInfo", "response:", { info: err });
         }
       );
     } else {
       helper.responseFormat(ctx, 412, "查询失败", { info: "参数缺失" });
-      logger.info("sys/sysInfo", "response:", { info: "参数缺失" });
+      logger.info("getSysInfo", "response:", { info: "参数缺失" });
     }
   }
 
@@ -44,7 +44,7 @@ class infoController {
     let params = Object.assign({}, ctx.request.query, ctx.request.body);
     if (!params.kinds) {
       helper.responseFormat(ctx, 412, "查询失败", { info: "参数缺失(kinds)" });
-      logger.info("sys/goldInfo", "response:", { info: "参数缺失(kinds)" });
+      logger.info("getGoldInfo", "response:", { info: "参数缺失(kinds)" });
     } else {
       const options = {
         method: "GET",
@@ -97,7 +97,7 @@ class infoController {
       helper.responseFormat(ctx, 200, "文件保存成功", { id: data.insertId });
     } catch (err) {
       helper.responseFormat(ctx, 412, "信息插入失败", err);
-      logger.error("users/login", "response:", err);
+      logger.error("saveNode", "response:", err);
     }
   }
 
@@ -116,14 +116,17 @@ class infoController {
         helper.responseFormat(ctx, 200, "success", data);
       } else {
         helper.responseFormat(ctx, 412, "参数缺失", { err: "缺失user_id" });
-        logger.error("node/query", "response:", { err: "缺失user_id" });
+        logger.error("getNode", "response:", { err: "缺失user_id" });
       }
     } catch (err) {
       helper.responseFormat(ctx, 412, "信息查询失败", err);
-      logger.error("node/query", "response:", err);
+      logger.error("getNode", "response:", err);
     }
   }
 
+  /**
+   * 删除 / 移入回收站 / 移出回收站
+   */
   static async delNode(ctx) {
     try {
       let params = Object.assign({}, ctx.request.query, ctx.request.body);
@@ -138,11 +141,76 @@ class infoController {
         helper.responseFormat(ctx, 200, "success", data);
       } else {
         helper.responseFormat(ctx, 412, "参数缺失", { err: "缺失参数" });
-        logger.error("node/query", "response:", { err: "缺失参数" });
+        logger.error("delNode", "response:", { err: "缺失参数" });
       }
     } catch (err) {
       helper.responseFormat(ctx, 412, "信息查询失败", err);
-      logger.error("node/query", "response:", err);
+      logger.error("delNode", "response:", err);
+    }
+  }
+
+  /**
+   * 笔记分类
+   */
+  static async getNodeType(ctx) {
+    try {
+      let data = await InfoService.queryNodeType();
+      helper.responseFormat(ctx, 200, "success", data);
+    } catch (err) {
+      helper.responseFormat(ctx, 412, "信息查询失败", err);
+      logger.error("getNodeType", "response:", err);
+    }
+  }
+
+  /**
+   * 删除笔记分类
+   */
+  static async delNodeType(ctx) {
+    try {
+      if (ctx.params.id) {
+        let data = await InfoService.delNodeType(ctx.params.id);
+        if (data[0][0].failed === "failed") {
+          helper.responseFormat(ctx, 501, "删除失败，存在引用", {
+            err: "删除失败，存在引用",
+          });
+          logger.error("delNodeType", "response:", {
+            err: "删除失败，存在引用",
+          });
+        } else {
+          helper.responseFormat(ctx, 200, "success", {});
+        }
+      } else {
+        helper.responseFormat(ctx, 412, "参数缺失", { err: "缺失参数" });
+        logger.error("delNodeType", "response:", { err: "缺失参数" });
+      }
+    } catch (err) {
+      helper.responseFormat(ctx, 412, "信息查询失败", err);
+      logger.error("delNodeType", "response:", err);
+    }
+  }
+
+  static async addNodeType(ctx) {
+    try {
+      let params = Object.assign({}, ctx.request.query, ctx.request.body);
+      if (params.nodeTypeStr) {
+        let data = await InfoService.addNodeType(params);
+        if (data[0][0].failed === "failed") {
+          helper.responseFormat(ctx, 501, "新增失败已存在", {
+            err: "新增失败已存在",
+          });
+          logger.error("addNodeType", "response:", {
+            err: "新增失败已存在",
+          });
+        } else {
+          helper.responseFormat(ctx, 200, "success", {});
+        }
+      } else {
+        helper.responseFormat(ctx, 412, "参数缺失", { err: "缺失参数" });
+        logger.error("addNodeType", "response:", { err: "缺失参数" });
+      }
+    } catch (err) {
+      helper.responseFormat(ctx, 412, "信息查询失败", err);
+      logger.error("addNodeType", "response:", err);
     }
   }
 }
