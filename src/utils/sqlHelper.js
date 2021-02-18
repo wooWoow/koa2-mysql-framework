@@ -1,35 +1,33 @@
 import mysql from "mysql";
 import config from "../../config/db.config";
 
+// 连接池
+let Pool = null;
+
 /**
  * 数据库连接帮助类
  */
 export default class sqlHelper {
   static getPool() {
-    return mysql.createPool(config[process.env.NODE_ENV]);
+    if (!Pool) {
+      Pool = mysql.createPool(config[process.env.NODE_ENV]);
+    }
+    return Pool;
   }
-  static execute(sql, values) {
+  static execute(sql, values = false) {
     return new Promise((resolve, reject) => {
       let pool = sqlHelper.getPool();
       pool.getConnection((err, conn) => {
         if (err) {
           reject(err);
-          conn.destroy();
           return;
         }
-        if (values !== undefined) {
-          conn.query(sql, values, (err, rows) => {
-            if (err) reject(err);
-            else resolve(rows);
-            conn.destroy();
-          });
-        } else {
-          conn.query(sql, (err, rows) => {
-            if (err) reject(err);
-            else resolve(rows);
-            conn.destroy();
-          });
-        }
+        conn.query(sql, values, (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+          // conn.destroy();
+          conn.release();
+        });
       });
     });
   }
