@@ -189,6 +189,9 @@ class infoController {
     }
   }
 
+  /**
+   * 新增笔记分类
+   */
   static async addNodeType(ctx) {
     try {
       let params = Object.assign({}, ctx.request.query, ctx.request.body);

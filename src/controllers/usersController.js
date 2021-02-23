@@ -31,6 +31,7 @@ class usersController {
           let responseData = {
             token,
             userId: data[0].user_id,
+            userName: data[0].user_name
           };
           helper.responseFormat(ctx, 200, "登录成功", responseData);
           logger.info("users/login", "response:", responseData);

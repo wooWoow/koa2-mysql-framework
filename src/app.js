@@ -8,6 +8,7 @@ import bodyparser from "koa-bodyparser";
 import koaLogger from "koa-logger";
 import path from "path";
 import jwt from "koa-jwt";
+import jsonwebtoken from "jsonwebtoken";
 import fs from "fs";
 import { errorRoute, notFoundRoute } from "./middleware/errorRouteCatch";
 import { accessLogger, logger } from "../config/logger.config";
@@ -40,11 +41,11 @@ app.use(json());
 app.use(accessLogger());
 app.use(koaLogger());
 
-// router error
-app.use(errorRoute());
-
 // 静态资源
 app.use(require("koa-static")(path.join(__dirname, "../assets")));
+
+// router error
+app.use(errorRoute());
 
 // set the signature, control api to be accessed
 app.use(
@@ -54,7 +55,7 @@ app.use(
     path: [
       /^\/v1\/users\/login/,
       /^\/v1\/home/,
-      /^\/v1\/info\/[\s\S]*/
+      // /^\/v1\/info\/[\s\S]*/
     ],
   })
 );
@@ -70,8 +71,14 @@ app.use(
 // extends request header info
 app.use(async (ctx, next) => {
   ctx.request.header.publicKey = publicKey.toString();
-  // test authorization
-  // ctx.request.header = {'authorization': "Bearer " + (ctx.request.headers.)}
+
+  // 解析token内容
+  if (ctx.request.header.authorization) {
+    let token = ctx.request.header.authorization;
+    token = (token && token.split(" ")[1]) || "";
+    ctx.request.header.tokenParse = jsonwebtoken.decode(token);
+  }
+
   await next();
 });
 
