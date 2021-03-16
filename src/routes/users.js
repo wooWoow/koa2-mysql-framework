@@ -7,16 +7,28 @@ const router = koaRouter();
  */
 router.prefix("/v1/users");
 
-// 测试登录
+// 登录
 router.post("/login", usersController.login);
 
-// 测试读取数据库
-router.get("/getUserInfoByUserId", usersController.getUserInfoByUserId);
+// 读取用户数据
+router.get("/getUserInfo", usersController.getUserInfo);
+
+// 密码修改
+router.post("/changePassword", usersController.changePassword);
+
+// 新增用户
+router.post("/addUser", usersController.addUser);
+
+// 用户列表
+router.get("/getUser", usersController.getUser);
+
+// 变更用户状态
+router.post("/changeUserStatus", usersController.changeUserStatus);
 
 // 测试访第三方接口
 router.get("/getRemoteData", usersController.getRemoteData);
 
-// 测试本地读取文件数据
+// 本地读取文件数据
 router.get("/readFiles", usersController.readFiles);
 
 export default router;
