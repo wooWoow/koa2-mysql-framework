@@ -16,7 +16,7 @@ const upload = {
 
 class infoController {
   /**
-   * 获取获取系统信息
+   * 命令执行
    */
   static async getSysInfo(ctx) {
     let params = ctx.request.body || ctx.request.query;

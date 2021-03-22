@@ -8,14 +8,14 @@ koaLogjs.configure({
           pattern: '-yyyy-MM-dd.log', //生成文件的规则
           alwaysIncludePattern: true, //文件名始终以日期区分
           encoding:"utf-8",
-          filename: path.join(__dirname, '../logs/access') //生成文件名
+          filename: path.join(__dirname, '../koaLogs/access') //生成文件名
         },
         trace: {
           type: 'dateFile',
           pattern: '-yyyy-MM-dd.log',
           alwaysIncludePattern: true, //文件名始终以日期区分
           encoding:"utf-8",
-          filename:  path.join(__dirname, '../logs/trace')
+          filename:  path.join(__dirname, '../koaLogs/trace')
         },
         out: {
           type: 'console'
