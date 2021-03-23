@@ -15,10 +15,14 @@ import { accessLogger, logger } from "../config/logger.config";
 import sessConfig from "../config/session.config";
 import routers from "./routes/index";
 
+const publicKey = fs.readFileSync(path.join(__dirname, "../publicKey.pub"));
+
 // error handler
 const app = new Koa();
-const publicKey = fs.readFileSync(path.join(__dirname, "../publicKey.pub"));
 onerror(app);
+
+// 日志
+app.use(accessLogger());
 logger.error("start app", "env:", process.env.NODE_ENV);
 
 // 上传中间件
@@ -38,14 +42,9 @@ app.use(
   })
 );
 app.use(json());
-app.use(accessLogger());
-app.use(koaLogger());
 
 // 静态资源
 app.use(require("koa-static")(path.join(__dirname, "../assets")));
-
-// router error
-app.use(errorRoute());
 
 // set the signature, control api to be accessed
 app.use(
@@ -87,12 +86,16 @@ app.keys = [publicKey.toString()];
 app.use(session(sessConfig, app));
 
 // logger
+app.use(koaLogger());
 app.use(async (ctx, next) => {
   const start = new Date();
   await next();
   const ms = new Date() - start;
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
+
+// router error
+app.use(errorRoute());
 
 // routes
 routers.forEach((router) => {
