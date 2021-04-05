@@ -1,6 +1,6 @@
 import sqlHelper from "../utils/sqlHelper.js";
 
-class InfoService extends sqlHelper {
+class NodeService extends sqlHelper {
   async saveNode(params) {
     if (params.nodeId) {
       let sql = `
@@ -106,4 +106,4 @@ class InfoService extends sqlHelper {
   }
 }
 
-export default new InfoService();
+export default new NodeService();
