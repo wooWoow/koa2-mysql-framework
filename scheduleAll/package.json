@@ -1,0 +1,16 @@
+{
+  "name": "scheduleAll",
+  "version": "1.0.0",
+  "description": "",
+  "main": "entry.js",
+  "scripts": {
+    "poll": "pm2 start ./process.config.js --only poll"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "node-schedule": "^2.0.0"
+  }
+}

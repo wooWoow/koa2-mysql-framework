@@ -3,3 +3,5 @@ yarn.lock
 /logs/
 /config/txapi.config.js
 package-lock.json
+/scheduleAll/node_modules/
+/scheduleAll/package-lock.json
