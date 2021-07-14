@@ -115,7 +115,7 @@ const getHumitureForMinute = () => {
 
 const humitureDo = () => {
   return new Promise((resolve, reject) => {
-    child.exec("python3 ./script/DHT11.py", (error, stdout, stderr) => {
+    child.exec("python ./script/DHT22.py", (error, stdout, stderr) => {
       if (error) {
         reject(error);
       } else {

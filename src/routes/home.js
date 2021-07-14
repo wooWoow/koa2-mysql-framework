@@ -1,22 +1,15 @@
 import koaRouter from "koa-router";
-const router = koaRouter();
+import homeController from "../controllers/homeController";
 
+const router = koaRouter();
+/**
+ * 接口路径加前缀
+ */
 router.prefix("/v1/home");
 
-router.get("/", async (ctx, next) => {
-  await ctx.render("index", {
-    title: "Hello Koa 2!",
-  });
-});
+router.get("/humiture/today/minute", homeController.getTodayHumMin);
 
-router.get("/string", async (ctx, next) => {
-  ctx.body = "koa2 string";
-});
+router.get("/humiture/today/hour", homeController.getTodayHumForHour);
 
-router.get("/json", async (ctx, next) => {
-  ctx.body = {
-    title: "koa2 json",
-  };
-});
-
+router.get("/humiture/history/hour", homeController.getHistoryHumForHour);
 export default router;

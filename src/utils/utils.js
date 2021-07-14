@@ -1,5 +1,6 @@
 const child = require("child_process");
 const fs = require("fs");
+var readline = require('readline');
 const path = require("path");
 import { logger } from "../../config/logger.config";
 
@@ -64,6 +65,26 @@ class utils {
       // 有其他格式化字符需求可以继续添加，必须转化成字符串
     };
     return opt;
+  }
+
+  static readFile (path) {
+    return new Promise((resolve, reject) => {
+      var fRead = fs.createReadStream(path);
+      var objReadline = readline.createInterface({
+        input: fRead,
+      });
+      var arr = [];
+      objReadline.on("line", function (line) {
+        arr.push(line);
+      });
+      objReadline.on("close", function () {
+        resolve(arr);
+      });
+    });
+  }
+
+  static random(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
   }
 }
 

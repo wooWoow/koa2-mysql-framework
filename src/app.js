@@ -14,6 +14,8 @@ import { errorRoute, notFoundRoute } from "./middleware/errorRouteCatch";
 import { accessLogger, logger } from "../config/logger.config";
 import sessConfig from "../config/session.config";
 import routers from "./routes/index";
+// 轮询任务
+import Schedule from "./utils/schedule";
 
 const publicKey = fs.readFileSync(path.join(__dirname, "../publicKey.pub"));
 
@@ -110,5 +112,9 @@ app.on("error", (err, ctx) => {
   console.error("server error", err, ctx);
   logger.error("server error", err, ctx);
 });
+
+if (process.env.NODE_ENV === 'prod') {
+  Schedule.doSome();
+}
 
 module.exports = app;

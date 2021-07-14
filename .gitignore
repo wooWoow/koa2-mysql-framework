@@ -5,3 +5,4 @@ yarn.lock
 package-lock.json
 /scheduleAll/node_modules/
 /scheduleAll/package-lock.json
+/scheduleAll/export/
